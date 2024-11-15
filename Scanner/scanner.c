@@ -45,7 +45,7 @@ Token* getToken(void)
 		  	state =7; 
 			break;
   		case CHAR_PLUS:
-  			state =12;
+  			state =9;
 			break;
   		case CHAR_MINUS:
   			state =10;
@@ -65,7 +65,7 @@ Token* getToken(void)
   		case CHAR_EQ:
     		state =19; 
 			break;
-  		case CHAR_EXCLAMATION:
+  		case CHAR_EXCLAIMATION:
   			state = 20;
 			break;
   		case CHAR_COMMA:
@@ -97,8 +97,12 @@ Token* getToken(void)
   	return makeToken(TK_EOF, lineNo, colNo);
   case 2:
     //TODO (Skip blanks)
+    while (currentChar != -1 && charCodes[currentChar] == CHAR_SPACE)
+      readChar();
+    return getToken();
   case 3:
  	// TODO Recognize Identifiers and keywords
+    return readIdentKeyword();
   case 4:
   		token->tokenType = checkKeyword(str);
   		if (token->tokenType == TK_NONE) state=5; else state =6;
@@ -110,14 +114,28 @@ Token* getToken(void)
   case 7: 
 	//TODO  Numbers
   case 9:
-	readChar();
-    return makeToken(SB_PLUS, lineNo, colNo-1);
+    // plus
+    token = makeToken(SB_PLUS, lineNo, colNo);
+    readChar();
+    return token;
   case 10:
-	//TODO 
+	//TODO
+    // minus
+    token = makeToken(SB_MINUS, lineNo, colNo);
+    readChar();
+    return token;
   case 11:
 	//TODO 
+    // times
+    token = makeToken(SB_TIMES, lineNo, colNo);
+    readChar();
+    return token;
   case 12:
 	//TODO 
+    // slash
+    token = makeToken(SB_SLASH, lineNo, colNo);
+    readChar();
+    return token;
   case 13:
     readChar();
    	if (charCodes[currentChar] == CHAR_EQ) state = 14; else state =15; 
@@ -135,8 +153,26 @@ Token* getToken(void)
 	//TODO 
   case 19:
 	//TODO 
+    // equal
+    token = makeToken(SB_EQ, lineNo, colNo);
+    readChar();
+    return token;
   case 20:
 	//TODO 
+    // exclaimation
+    // Make empty token
+    token = makeToken(TK_NONE, lineNo, colNo);
+
+    // If next character is not '='
+    readChar();
+    if (charCodes[currentChar] != CHAR_EQ) {
+      // it is an invalid token
+      error(ERR_INVALIDSYMBOL, token->lineNo, token->colNo);
+    } else {
+      // else, it's token Not Equal
+      token->tokenType = SB_NEQ;
+    }
+    return token;
   case 21:
     readChar();
     return makeToken(SB_NEQ, lineNo, colNo-1);
@@ -146,6 +182,10 @@ Token* getToken(void)
     return token;
   case 23:
 	//TODO 
+    // comma
+    token = makeToken(SB_COMMA, lineNo, colNo);
+    readChar();
+    return token;
   case 24: 
     //TODO 
   case 25:
@@ -156,6 +196,18 @@ Token* getToken(void)
     //TODO 
   case 28:
     //TODO 
+    // colon
+    // Token Semicolon
+    token = makeToken(SB_SEMICOLON, lineNo, colNo);
+
+    // If next character is Equal
+    readChar();
+    if (charCodes[currentChar] == CHAR_EQ) {
+      // it is token Assignment
+      token->tokenType = SB_ASSIGN;
+      readChar();
+    }
+    return token;
   case 29:
 	//TODO 
   case 30:
