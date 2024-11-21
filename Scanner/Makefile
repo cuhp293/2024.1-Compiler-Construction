@@ -24,4 +24,3 @@ error.o: error.c
 
 clean:
 	rm -f *.o *~
-
