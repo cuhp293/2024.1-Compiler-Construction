@@ -21,8 +21,8 @@ int readChar(void) {
   return currentChar;
 }
 
-openInputStream() {
-  inputStream = fopen("c:\example1.kpl", "rt");
+int openInputStream(char *filename) {
+  inputStream = fopen("\test\example1.kpl", "rt");
     if (inputStream == NULL)
     {printf("Khong thay");return IO_ERROR;}
     else printf("Da mo xong");

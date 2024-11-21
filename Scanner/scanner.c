@@ -97,45 +97,62 @@ Token* getToken(void)
   	return makeToken(TK_EOF, lineNo, colNo);
   case 2:
     //TODO (Skip blanks)
-    while (currentChar != -1 && charCodes[currentChar] == CHAR_SPACE)
-      readChar();
+    // add
+    while (currentChar != EOF && isspace(currentChar)) {
+        readChar();
+    }
     return getToken();
   case 3:
- 	// TODO Recognize Identifiers and keywords
-    return readIdentKeyword();
+ 	  // TODO Recognize Identifiers and keywords
+    // add
+    {
+      int length = 0;
+      while (currentChar != EOF && (charCodes[currentChar] == CHAR_LETTER || charCodes[currentChar] == CHAR_DIGIT)) {
+          if (length < MAX_IDENT_LEN) {
+              str[length++] = (char)currentChar;
+          }
+          readChar();
+      }
+      str[length] = '\0';
+      token = makeToken(TK_IDENT, ln, cn);
+      strcpy(token->string, str);
+      state = 4;
+    }
+    return getToken();
   case 4:
   		token->tokenType = checkKeyword(str);
   		if (token->tokenType == TK_NONE) state=5; else state =6;
     	return getToken();
   case 5:
-  		//TODO Identifiers
+    //TODO Identifiers
+    // add
+    strcpy(token->string, str);
+    token->tokenType = TK_IDENT;
+    return token;
   case 6:
   		//TODO Keywords
   case 7: 
 	//TODO  Numbers
   case 9:
     // plus
-    token = makeToken(SB_PLUS, lineNo, colNo);
-    readChar();
-    return token;
+    // token = makeToken(SB_PLUS, lineNo, colNo);
+    // readChar();
+    // return token;
   case 10:
 	//TODO
-    // minus
-    token = makeToken(SB_MINUS, lineNo, colNo);
+    // add minus
     readChar();
-    return token;
+    return makeToken(SB_MINUS, lineNo, colNo-1);
   case 11:
 	//TODO 
-    // times
-    token = makeToken(SB_TIMES, lineNo, colNo);
+    // add times
     readChar();
-    return token;
+    return makeToken(SB_TIMES, lineNo, colNo-1);
   case 12:
 	//TODO 
-    // slash
-    token = makeToken(SB_SLASH, lineNo, colNo);
+    // add slash
     readChar();
-    return token;
+    return makeToken(SB_SLASH, lineNo, colNo-1);
   case 13:
     readChar();
    	if (charCodes[currentChar] == CHAR_EQ) state = 14; else state =15; 
@@ -147,32 +164,38 @@ Token* getToken(void)
 	return makeToken(SB_LT, lineNo, colNo-1);
   case 16:
 	//TODO 
+    // add
+    readChar();
+    if (charCodes[currentChar] == CHAR_EQ) {
+        state = 17;
+    } else {
+        state = 18;
+    }
+    return getToken();
   case 17:
 	//TODO 
+    // add
+    readChar();
+    return makeToken(SB_GE, lineNo, colNo-1);
   case 18:
 	//TODO 
+    // add
+    return makeToken(SB_GT, lineNo, colNo-1);
   case 19:
 	//TODO 
-    // equal
-    token = makeToken(SB_EQ, lineNo, colNo);
+    // add equal
     readChar();
-    return token;
+    return makeToken(SB_EQ, lineNo, colNo-1);
   case 20:
 	//TODO 
-    // exclaimation
-    // Make empty token
-    token = makeToken(TK_NONE, lineNo, colNo);
-
-    // If next character is not '='
+    // add
     readChar();
-    if (charCodes[currentChar] != CHAR_EQ) {
-      // it is an invalid token
-      error(ERR_INVALIDSYMBOL, token->lineNo, token->colNo);
+    if (charCodes[currentChar] == CHAR_EQ) {
+        state = 21;
     } else {
-      // else, it's token Not Equal
-      token->tokenType = SB_NEQ;
+        state = 22;
     }
-    return token;
+    return getToken();
   case 21:
     readChar();
     return makeToken(SB_NEQ, lineNo, colNo-1);
@@ -182,36 +205,53 @@ Token* getToken(void)
     return token;
   case 23:
 	//TODO 
-    // comma
-    token = makeToken(SB_COMMA, lineNo, colNo);
+    // add comma
     readChar();
-    return token;
+    return makeToken(SB_COMMA, lineNo, colNo-1);
   case 24: 
     //TODO 
+    // add
+    readChar();
+    if (charCodes[currentChar] == CHAR_RPAR) {
+        state = 25;
+    } else {
+        state = 26;
+    }
+    return getToken();
   case 25:
-    //TODO 
+    //TODO
+    // add
+    readChar();
+    return makeToken(SB_RSEL, lineNo, colNo-2); 
   case 26:
     //TODO 
+    // add
+    readChar();
+    return makeToken(SB_RSEL, lineNo, colNo-2);
   case 27:
     //TODO 
+    // add
+    readChar();
+    return makeToken(SB_SEMICOLON, lineNo, colNo-1);
   case 28:
     //TODO 
-    // colon
-    // Token Semicolon
-    token = makeToken(SB_SEMICOLON, lineNo, colNo);
-
-    // If next character is Equal
+    // add colon
     readChar();
     if (charCodes[currentChar] == CHAR_EQ) {
-      // it is token Assignment
-      token->tokenType = SB_ASSIGN;
-      readChar();
+        state = 29;
+    } else {
+        state = 30;
     }
-    return token;
+    return getToken();
   case 29:
 	//TODO 
+    // add
+    readChar();
+    return makeToken(SB_ASSIGN, lineNo, colNo-1);
   case 30:
-    //TODO 
+    //TODO
+    // add
+    return makeToken(SB_COLON, lineNo, colNo-1); 
   case 31:
     readChar();
   	if (currentChar == EOF) 
@@ -258,12 +298,40 @@ Token* getToken(void)
     
   case 36: 
   	//TODO 
+    // add
+    readChar();
+    if (charCodes[currentChar] == CHAR_RPAR) {
+        state = 37;
+    } else {
+        state = 40;
+    }
+    return getToken();
   case 37:
   	//TODO 
+    // add
+    readChar();
+    return makeToken(SB_RSEL, ln, cn);
   case 38:
   	//TODO 
+    // add
+    readChar();
+    if (currentChar == EOF) {
+        state = 40;
+    } else if (charCodes[currentChar] == CHAR_TIMES) {
+        state = 39;
+    }
+    return getToken();
   case 39: 
   	//TODO 
+    // add
+    readChar();
+    if (charCodes[currentChar] == CHAR_RPAR) {
+        readChar();
+        return getToken();
+    } else {
+        state = 38;
+    }
+    return getToken();
   case 40:
     error(ERR_ENDOFCOMMENT, lineNo, colNo);
   case 41:return makeToken(SB_LPAR, ln, cn);

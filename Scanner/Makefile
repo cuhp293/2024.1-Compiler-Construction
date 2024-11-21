@@ -4,9 +4,6 @@ LIBS =  -lm
 
 all: scanner
 
-debug: CFLAGS += -g
-debug: scanner
-
 scanner: scanner.o reader.o charcode.o token.o error.o
 	${CC} scanner.o reader.o charcode.o token.o error.o -o scanner
 
