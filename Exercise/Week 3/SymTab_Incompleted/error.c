@@ -65,4 +65,3 @@ void missingToken(TokenType tokenType, int lineNo, int colNo) {
 void assert(char *msg) {
   printf("%s\n", msg);
 }
-
