@@ -429,3 +429,12 @@ void printToken(Token* token) {
 	}
 }
 
+int compareTokenStringIgnoreCase(char* str1, char* str2) {
+    while (*str1 && *str2) {
+        if (tolower(*str1) != tolower(*str2))
+            return 0;
+        str1++;
+        str2++;
+    }
+    return *str1 == *str2;
+}

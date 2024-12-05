@@ -12,5 +12,6 @@
 Token* getToken(void);
 Token* getValidToken(void);
 void printToken(Token *token);
+int compareTokenStringIgnoreCase(char* str1, char* str2);
 
 #endif
