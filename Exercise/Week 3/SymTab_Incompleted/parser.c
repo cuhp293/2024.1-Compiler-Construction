@@ -26,22 +26,10 @@ void scan(void) {
   free(tmp);
 }
 
-// void eat(TokenType tokenType) {
-//   if (lookAhead->tokenType == tokenType) {
-//     scan();
-//   } else missingToken(tokenType, lookAhead->lineNo, lookAhead->colNo);
-// }
-
 void eat(TokenType tokenType) {
-  // Kiểm tra token type một cách không phân biệt chữ hoa/chữ thường
   if (lookAhead->tokenType == tokenType) {
     scan();
-  } else {
-    // In ra dòng lỗi chi tiết hơn để dễ debug
-    fprintf(stderr, "Expected token type %d, but got %d at line %d, column %d\n", 
-            tokenType, lookAhead->tokenType, lookAhead->lineNo, lookAhead->colNo);
-    missingToken(tokenType, lookAhead->lineNo, lookAhead->colNo);
-  }
+  } else missingToken(tokenType, lookAhead->lineNo, lookAhead->colNo);
 }
 
 void compileProgram(void) {

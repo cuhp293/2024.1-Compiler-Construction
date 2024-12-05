@@ -33,10 +33,10 @@ typedef struct {
   int value;
 } Token;
 
+int keywordEq(char *kw, char *string);
 TokenType checkKeyword(char *string);
 Token* makeToken(TokenType tokenType, int lineNo, int colNo);
 char *tokenToString(TokenType tokenType);
-int keywordEq(char *kw, char *string);
 
 
 #endif

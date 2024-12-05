@@ -36,7 +36,6 @@ struct {
 
 int keywordEq(char *kw, char *string) {
   while ((*kw != '\0') && (*string != '\0')) {
-    // Chuyển cả hai ký tự về chữ thường trước khi so sánh
     if (tolower(*kw) != tolower(*string)) 
       break;
     kw++; 
