@@ -68,7 +68,7 @@ Token* getToken(void)
   		case CHAR_EQ:
     		state =19; 
 			break;
-  		case CHAR_EXCLAMATION:
+  		case CHAR_EXCLAIMATION:
   			state = 20;
 			break;
   		case CHAR_COMMA:

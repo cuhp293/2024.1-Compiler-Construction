@@ -426,16 +426,16 @@ void compileLValue(void) {
   eat(TK_IDENT);
   // check if the identifier is a function identifier, or a variable identifier, or a parameter  
   var = checkDeclaredLValueIdent(currentToken->string);
-  switch (var->kind)
-  case OBJ_VARIABLE
-    compileIndexes();
-  case OBJ_PARAMETER:
-    break;
-  case OBJ_FUNCTION:
-     //TODO
-   
-default: 
-    error(ERR_INVALID_LVALUE,currentToken->lineNo, currentToken->colNo);
+  switch (var->kind) {
+    case OBJ_VARIABLE:
+      compileIndexes();
+    case OBJ_PARAMETER:
+      break;
+    case OBJ_FUNCTION:
+      //TODO
+    default: 
+        error(ERR_INVALID_LVALUE,currentToken->lineNo, currentToken->colNo);
+    }
 }
 
 void compileAssignSt(void) {
