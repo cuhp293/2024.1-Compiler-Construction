@@ -4,6 +4,7 @@
  * @version 1.0
  */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "semantics.h"
@@ -30,12 +31,12 @@ void checkFreshIdent(char *name) {
   if (findObject(symtab->currentScope->objList, name) != NULL)
     error(ERR_DUPLICATE_IDENT, currentToken->lineNo, currentToken->colNo);
 }
+
 Object* checkDeclaredIdent(char* name) {
-  // TODO
-  // Kiểm tra xem định danh có được khai báo không
   Object* obj = lookupObject(name);
   if (obj == NULL)
-    error(ERR_UNDECLARED_IDENT, currentToken->lineNo, currentToken->colNo);
+    error(ERR_UNDECLARED_IDENT,currentToken->lineNo, currentToken->colNo);
+  
   return obj;
 }
 
@@ -59,38 +60,27 @@ Object* checkDeclaredType(char* name) {
   return obj;
 }
 Object* checkDeclaredVariable(char* name) {
-  // TODO
-  // Kiểm tra xem biến có được khai báo không
   Object* obj = lookupObject(name);
   if (obj == NULL)
-    error(ERR_UNDECLARED_VARIABLE, currentToken->lineNo, currentToken->colNo);
+    error(ERR_UNDECLARED_VARIABLE,currentToken->lineNo, currentToken->colNo);
   if (obj->kind != OBJ_VARIABLE)
-    error(ERR_INVALID_VARIABLE, currentToken->lineNo, currentToken->colNo);
+    error(ERR_INVALID_VARIABLE,currentToken->lineNo, currentToken->colNo);
+
   return obj;
 }
 
 Object* checkDeclaredProcedure(char* name) {
-  // TODO
-  // Kiểm tra xem thủ tục có được khai báo không
   Object* obj = lookupObject(name);
   if (obj == NULL)
-    error(ERR_UNDECLARED_PROCEDURE, currentToken->lineNo, currentToken->colNo);
-  if (obj->kind != OBJ_PROCEDURE)
-    error(ERR_INVALID_PROCEDURE, currentToken->lineNo, currentToken->colNo);
-  return obj;
+    error(ERR_UNDECLARED_PROCEDURE,currentToken->lineNo, currentToken->colNo); 
 }
 
 Object* checkDeclaredLValueIdent(char* name) {
-  // TODO
-  // Kiểm tra vế trái là biến -> kiểu array, số chiều của mảng
-  // Kiểm tra xem định danh có thể được gán giá trị không
   Object* obj = lookupObject(name);
   if (obj == NULL)
-    error(ERR_UNDECLARED_IDENT, currentToken->lineNo, currentToken->colNo);
-  
-  // Chỉ cho phép gán giá trị cho biến và tham số
-  if (obj->kind != OBJ_VARIABLE && obj->kind != OBJ_PARAMETER)
-    error(ERR_INVALID_LVALUE, currentToken->lineNo, currentToken->colNo);
+    error(ERR_UNDECLARED_IDENT,currentToken->lineNo, currentToken->colNo);
+  if (obj->kind != OBJ_VARIABLE && obj->kind != OBJ_FUNCTION)
+    error(ERR_INVALID_LVALUE,currentToken->lineNo, currentToken->colNo);
   
   return obj;
 }

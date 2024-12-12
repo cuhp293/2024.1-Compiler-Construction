@@ -36,11 +36,12 @@ struct {
 
 int keywordEq(char *kw, char *string) {
   while ((*kw != '\0') && (*string != '\0')) {
-    if (*kw != *string) break;
-    kw ++; string ++;
+    if (toupper(*kw) != toupper(*string)) break;  // So sánh không phân biệt hoa/thường
+    kw++; string++;
   }
   return ((*kw == '\0') && (*string == '\0'));
 }
+
 
 TokenType checkKeyword(char *string) {
   int i;

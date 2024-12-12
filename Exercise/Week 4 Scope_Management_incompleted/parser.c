@@ -433,9 +433,12 @@ void compileLValue(void) {
       break;
     case OBJ_FUNCTION:
       //TODO
+      if (var->funcAttrs->scope->owner != symtab->currentScope->owner)
+        error(ERR_INVALID_RETURN,currentToken->lineNo, currentToken->colNo);
+      break;
     default: 
-        error(ERR_INVALID_LVALUE,currentToken->lineNo, currentToken->colNo);
-    }
+      error(ERR_INVALID_LVALUE,currentToken->lineNo, currentToken->colNo);
+  }
 }
 
 void compileAssignSt(void) {
