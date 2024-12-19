@@ -7,7 +7,7 @@ Program Example6;
 
    Function F(p1 : Integer; Var p2 : char) : Integer;
      Begin
-       f := c1;
+       v1 := c2;
      End;
 
    procedure p(v1 : integer);

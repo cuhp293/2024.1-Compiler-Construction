@@ -1,3 +1,12 @@
-Program Example1; (* Example 1 *)
+Program Example1;
+
+Var x: Integer;
+
+Procedure Test(var a: Integer);
 Begin
-End. (* Example 1 *)
+End;
+
+Begin
+    x := 5;
+    Test(x + 1);
+End.

@@ -226,17 +226,22 @@ ConstantValue* compileUnsignedConstant(void) {
 
 ConstantValue* compileConstant(void) {
   ConstantValue* constValue;
+  Type* type = (Type*)malloc(sizeof(Type));
 
   switch (lookAhead->tokenType) {
   case SB_PLUS:
     eat(SB_PLUS);
     constValue = compileConstant2();
+    type->typeClass = constValue->type;
     //TODO Check if type of the constant is integer
+    checkIntType(type);
     break;
   case SB_MINUS:
     eat(SB_MINUS);
     constValue = compileConstant2();
     //TODO Check if type of the constant is integer
+    type->typeClass = constValue->type;
+    checkIntType(type);
     constValue->intValue = - constValue->intValue;
     break;
   case TK_CHAR:
@@ -416,17 +421,22 @@ Type* compileLValue(void) {
   eat(TK_IDENT);
   // check if the identifier is a function identifier, or a variable identifier, or a parameter  
   var = checkDeclaredLValueIdent(currentToken->string);
+  varType = var->varAttrs->type;
+
   if (var->kind == OBJ_VARIABLE)
-    compileIndexes();
+    varType = compileIndexes(varType);
 
   return varType;
 }
 
 void compileAssignSt(void) {
   // TODO: parse the assignment and check type consistency
-  compileLValue();
+
+  Type* type = compileLValue();
   eat(SB_ASSIGN);
-  compileExpression();
+
+  Type* type1 = compileExpression();
+  checkTypeEquality(type, type1);
 }
 
 void compileCallSt(void) {
@@ -468,42 +478,66 @@ void compileWhileSt(void) {
 }
 
 void compileForSt(void) {
-  // TODO: Check type consistency of FOR's variable
+  // Check type consistency of FOR's variable
+  Object* var;
+  Type* varType;
+  Type* expType;
+
   eat(KW_FOR);
   eat(TK_IDENT);
 
   // check if the identifier is a variable
-  checkDeclaredVariable(currentToken->string);
+  var = checkDeclaredVariable(currentToken->string);
+  varType = var->varAttrs->type;
 
   eat(SB_ASSIGN);
-  compileExpression();
+  expType = compileExpression();
+  checkTypeEquality(varType, expType);
 
   eat(KW_TO);
-  compileExpression();
+  expType = compileExpression();
+  checkTypeEquality(varType, expType);
 
   eat(KW_DO);
   compileStatement();
 }
 
 void compileArgument(Object* param) {
-  // TODO: parse an argument, and check type consistency
-  //       If the corresponding parameter is a reference, the argument must be a lvalue
-  compileExpression();
+  Type* argType;
+
+  if (param->paramAttrs->kind == PARAM_REFERENCE) {
+    argType = compileLValue();
+  } else {
+    argType = compileExpression();
+  }
+
+  checkTypeEquality(argType, param->paramAttrs->type);
 }
 
 void compileArguments(ObjectNode* paramList) {
   //TODO: parse a list of arguments, check the consistency of the arguments and the given parameters
+  ObjectNode* node = paramList;
   switch (lookAhead->tokenType) {
   case SB_LPAR:
     eat(SB_LPAR);
-    compileArgument();
+    if (node == NULL) {
+      error(ERR_PARAMETERS_ARGUMENTS_INCONSISTENCY, lookAhead->lineNo, lookAhead->colNo);
+    }
+    compileArgument(node->object);
 
     while (lookAhead->tokenType == SB_COMMA) {
       eat(SB_COMMA);
-      compileArgument();
+      node = node->next;
+      if (node == NULL) {
+        error(ERR_PARAMETERS_ARGUMENTS_INCONSISTENCY, lookAhead->lineNo, lookAhead->colNo);
+      }
+      compileArgument(node->object);
     }
     
     eat(SB_RPAR);
+    if (node->next != NULL) {
+      error(ERR_PARAMETERS_ARGUMENTS_INCONSISTENCY, lookAhead->lineNo, lookAhead->colNo);
+    }
     break;
     // Check FOLLOW set 
   case SB_TIMES:
@@ -525,6 +559,9 @@ void compileArguments(ObjectNode* paramList) {
   case KW_END:
   case KW_ELSE:
   case KW_THEN:
+    if (node != NULL) {
+      error(ERR_PARAMETERS_ARGUMENTS_INCONSISTENCY, lookAhead->lineNo, lookAhead->colNo);
+    }
     break;
   default:
     error(ERR_INVALID_ARGUMENTS, lookAhead->lineNo, lookAhead->colNo);
@@ -533,7 +570,8 @@ void compileArguments(ObjectNode* paramList) {
 
 void compileCondition(void) {
   // TODO: check the type consistency of LHS and RSH, check the basic type
-  compileExpression();
+  Type *type1, *type2;
+  type1 = compileExpression();
 
   switch (lookAhead->tokenType) {
   case SB_EQ:
@@ -558,7 +596,8 @@ void compileCondition(void) {
     error(ERR_INVALID_COMPARATOR, lookAhead->lineNo, lookAhead->colNo);
   }
 
-  compileExpression();
+  type2 = compileExpression();
+  checkTypeEquality(type1, type2);
 }
 
 Type* compileExpression(void) {
@@ -591,7 +630,7 @@ Type* compileExpression2(void) {
 }
 
 
-void compileExpression3(void) {
+Type* compileExpression3(void) {
   Type* type;
 
   switch (lookAhead->tokenType) {
@@ -638,7 +677,7 @@ Type* compileTerm(void) {
   return type;
 }
 
-void compileTerm2(void) {
+Type* compileTerm2(void) {
   Type* type;
 
   switch (lookAhead->tokenType) {
