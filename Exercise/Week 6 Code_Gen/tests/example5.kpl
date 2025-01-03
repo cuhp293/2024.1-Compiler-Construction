@@ -1,0 +1,18 @@
+Program Example5; 
+
+Var n : Integer;
+
+Procedure f(number : Integer);
+Begin
+  If (number - (number/2) * 2) = 0
+  Then 
+    CALL WRITEC('E')
+  Else
+    CALL WRITEC('O');
+  CALL WRITELN;
+End;
+
+Begin
+  n := READI;
+  CALL f(n);
+End.

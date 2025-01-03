@@ -5,10 +5,10 @@ Var n : Integer;
     S : Integer;
 
 Begin
-  n := ReadI;
+  n := READI;
   S := 0;
   For i:=1 To n Do
     S := S + i;
-  Call WriteI(S);
-  Call WriteLN;
+  CALL WRITEI(S);
+  CALL WRITELN;
 End. 

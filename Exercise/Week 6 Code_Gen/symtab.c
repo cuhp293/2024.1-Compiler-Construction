@@ -302,25 +302,30 @@ void initSymTab(void) {
 	obj = createFunctionObject("READC");
 	obj->funcAttrs->returnType = makeCharType();
 	addObject(&(symtab->globalObjectList), obj);
+  readcFunction = obj;
 
 	obj = createFunctionObject("READI");
 	obj->funcAttrs->returnType = makeIntType();
 	addObject(&(symtab->globalObjectList), obj);
+  readiFunction = obj;
 
 	obj = createProcedureObject("WRITEI");
 	param = createParameterObject("i", PARAM_VALUE);
 	param->paramAttrs->type = makeIntType();
 	addObject(&(obj->procAttrs->paramList), param);
 	addObject(&(symtab->globalObjectList), obj);
+  writeiProcedure = obj;
 
 	obj = createProcedureObject("WRITEC");
 	param = createParameterObject("ch", PARAM_VALUE);
 	param->paramAttrs->type = makeCharType();
 	addObject(&(obj->procAttrs->paramList), param);
 	addObject(&(symtab->globalObjectList), obj);
+  writecProcedure = obj;
 
 	obj = createProcedureObject("WRITELN");
 	addObject(&(symtab->globalObjectList), obj);
+  writelnProcedure = obj;
 
 	intType = makeIntType();
 	charType = makeCharType();

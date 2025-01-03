@@ -73,7 +73,7 @@ Object* checkDeclaredVariable(char* name) {
 Object* checkDeclaredFunction(char* name) {
   Object* obj = lookupObject(name);
   if (obj == NULL)
-    error(ERR_UNDECLARED_FUNCTION,currentToken->lineNo, currentToken->colNo);
+    error(ERR_UNDECLARED_IDENT,currentToken->lineNo, currentToken->colNo);
   if (obj->kind != OBJ_FUNCTION)
     error(ERR_INVALID_FUNCTION,currentToken->lineNo, currentToken->colNo);
 
