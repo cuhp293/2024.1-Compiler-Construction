@@ -271,7 +271,7 @@ Token* getToken(void)
 		return getToken();
 	case 29:
 		readChar();
-		return makeToken(SB_ASSIGN, lineNo, colNo - 1);
+		return makeToken(SB_ASSIGN, lineNo, colNo - 2);
 	case 30:
 		return makeToken(SB_COLON, lineNo, colNo - 1);
 	case 31:

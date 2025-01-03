@@ -28,7 +28,7 @@ Subroutines parsed ....
 6-1:KW_BEGIN
 Parsing an assign statement ....
 7-1:TK_IDENT(sum)
-7-5:SB_ASSIGN
+7-4:SB_ASSIGN
 Parsing an expression
 7-6:TK_NUMBER(0)
 Expression parsed
@@ -37,7 +37,7 @@ Assign statement parsed ....
 Parsing a for statement ....
 8-3:KW_FOR
 8-7:TK_IDENT(i)
-8-10:SB_ASSIGN
+8-9:SB_ASSIGN
 Parsing an expression
 8-12:TK_IDENT(k)
 Expression parsed
@@ -48,7 +48,7 @@ Expression parsed
 8-19:KW_DO
 Parsing an assign statement ....
 9-5:TK_IDENT(sum)
-9-9:SB_ASSIGN
+9-8:SB_ASSIGN
 Parsing an expression
 9-10:TK_IDENT(sum)
 9-13:SB_PLUS
