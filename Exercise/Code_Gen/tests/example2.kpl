@@ -1,0 +1,13 @@
+PROGRAM Example2; 
+   
+VAR n : INTEGER;
+
+BEGIN
+  n := READI;
+  IF (n - (n/2) * 2) = 0
+  THEN 
+    CALL WRITEC('E')
+  ELSE
+    CALL WRITEC('O');
+  CALL WRITELN;
+END. 

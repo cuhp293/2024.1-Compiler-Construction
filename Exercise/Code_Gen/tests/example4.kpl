@@ -1,0 +1,14 @@
+PROGRAM Example4; 
+   
+VAR n : INTEGER;
+    i : INTEGER;
+    S : INTEGER;
+
+BEGIN
+  n := READI;
+  S := 0;
+  FOR i:=1 TO n DO
+    S := S + i;
+  CALL WRITEI(S);
+  CALL WRITELN;
+END. 

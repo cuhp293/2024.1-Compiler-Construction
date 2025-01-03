@@ -19,29 +19,50 @@ extern Object* writelnProcedure;
 
 CodeBlock* codeBlock;
 
-void genVariableAddress(Object* var) {
-  // TODO
-  if (var->kind == OBJ_VARIABLE) {
-    genLA(var->varAttrs->scope->frameSize, var->varAttrs->localOffset);
-  } else if (var->kind == OBJ_PARAMETER) {
-    genLA(var->paramAttrs->scope->frameSize, var->paramAttrs->localOffset);
-  } else {
-    printf("Error: Invalid object kind for variable address generation.\n");
+int computeNestedLevel(Scope* scope) {
+  int level = 0;
+  Scope* tmp = symtab->currentScope;
+  while (tmp != scope) {
+    tmp = tmp->outer;
+    level ++;
   }
+  return level;
+}
+
+void genVariableAddress(Object* var) {
+  int level = computeNestedLevel(VARIABLE_SCOPE(var));
+  int offset = VARIABLE_OFFSET(var);
+  genLA(level, offset);
 }
 
 void genVariableValue(Object* var) {
-  // TODO
-  genVariableAddress(var);
-  genLI();
+  int level = computeNestedLevel(VARIABLE_SCOPE(var));
+  int offset = VARIABLE_OFFSET(var);
+  genLV(level, offset);
 }
 
-int isPredefinedFunction(Object* func) {
-  return ((func == readiFunction) || (func == readcFunction));
+void genParameterAddress(Object* param) {
+  int level = computeNestedLevel(PARAMETER_SCOPE(param));
+  int offset = PARAMETER_OFFSET(param);
+  genLA(level, offset);
 }
 
-int isPredefinedProcedure(Object* proc) {
-  return ((proc == writeiProcedure) || (proc == writecProcedure) || (proc == writelnProcedure));
+void genParameterValue(Object* param) {
+  int level = computeNestedLevel(PARAMETER_SCOPE(param));
+  int offset = PARAMETER_OFFSET(param);
+  genLV(level, offset);
+}
+
+void genReturnValueAddress(Object* func) {
+  int level = computeNestedLevel(FUNCTION_SCOPE(func));
+  int offset = RETURN_VALUE_OFFSET;
+  genLA(level, offset);
+}
+
+void genReturnValueValue(Object* func) {
+  int level = computeNestedLevel(FUNCTION_SCOPE(func));
+  int offset = RETURN_VALUE_OFFSET;
+  genLV(level, offset);
 }
 
 void genPredefinedProcedureCall(Object* proc) {
@@ -53,11 +74,21 @@ void genPredefinedProcedureCall(Object* proc) {
     genWLN();
 }
 
+void genProcedureCall(Object* proc) {
+  int level = computeNestedLevel(proc->procAttrs->scope->outer);
+  genCALL(level, proc->procAttrs->codeAddress);
+}
+
 void genPredefinedFunctionCall(Object* func) {
   if (func == readiFunction)
     genRI();
   else if (func == readcFunction)
     genRC();
+}
+
+void genFunctionCall(Object* func) {
+  int level = computeNestedLevel(func->funcAttrs->scope->outer);
+  genCALL(level, func->funcAttrs->codeAddress);
 }
 
 void genLA(int level, int offset) {
@@ -196,6 +227,13 @@ CodeAddress getCurrentCodeAddress(void) {
   return codeBlock->codeSize;
 }
 
+int isPredefinedFunction(Object* func) {
+  return ((func == readiFunction) || (func == readcFunction));
+}
+
+int isPredefinedProcedure(Object* proc) {
+  return ((proc == writeiProcedure) || (proc == writecProcedure) || (proc == writelnProcedure));
+}
 
 void initCodeBuffer(void) {
   codeBlock = createCodeBlock(CODE_SIZE);

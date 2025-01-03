@@ -1,0 +1,18 @@
+PROGRAM Example3; 
+   
+VAR n : INTEGER;
+    i : INTEGER;
+    S : INTEGER;
+
+BEGIN
+  n := READI;
+  S := 0;
+  i := 1;
+  WHILE i <= n DO
+    BEGIN
+      S := S + i;
+      i := i + 1;
+    END;
+  CALL WRITEI(S);
+  CALL WRITELN;
+END. 

@@ -19,29 +19,23 @@ extern Object* writelnProcedure;
 
 CodeBlock* codeBlock;
 
-void genVariableAddress(Object* var) {
+int computeNestedLevel(Scope* scope) {
   // TODO
-  if (var->kind == OBJ_VARIABLE) {
-    genLA(var->varAttrs->scope->frameSize, var->varAttrs->localOffset);
-  } else if (var->kind == OBJ_PARAMETER) {
-    genLA(var->paramAttrs->scope->frameSize, var->paramAttrs->localOffset);
-  } else {
-    printf("Error: Invalid object kind for variable address generation.\n");
+  int level = 0;
+  Scope* tmp = symtab->currentScope;
+  while (tmp != scope) {
+    tmp = tmp->outer;
+    level ++;
   }
+  return level;
+}
+
+void genVariableAddress(Object* var) {
+  genLA(computeNestedLevel(VARIABLE_SCOPE(var)), VARIABLE_OFFSET(var));
 }
 
 void genVariableValue(Object* var) {
-  // TODO
-  genVariableAddress(var);
-  genLI();
-}
-
-int isPredefinedFunction(Object* func) {
-  return ((func == readiFunction) || (func == readcFunction));
-}
-
-int isPredefinedProcedure(Object* proc) {
-  return ((proc == writeiProcedure) || (proc == writecProcedure) || (proc == writelnProcedure));
+  genLV(computeNestedLevel(VARIABLE_SCOPE(var)), VARIABLE_OFFSET(var));
 }
 
 void genPredefinedProcedureCall(Object* proc) {
@@ -53,11 +47,21 @@ void genPredefinedProcedureCall(Object* proc) {
     genWLN();
 }
 
+void genProcedureCall(Object* proc) {
+  // TODO
+  genCALL(computeNestedLevel(proc->procAttrs->scope->outer), proc->procAttrs->codeAddress);
+}
+
 void genPredefinedFunctionCall(Object* func) {
   if (func == readiFunction)
     genRI();
   else if (func == readcFunction)
     genRC();
+}
+
+void genFunctionCall(Object* func) {
+  // TODO
+  genCALL(computeNestedLevel(func->funcAttrs->scope->outer), func->funcAttrs->codeAddress);
 }
 
 void genLA(int level, int offset) {
@@ -196,6 +200,13 @@ CodeAddress getCurrentCodeAddress(void) {
   return codeBlock->codeSize;
 }
 
+int isPredefinedFunction(Object* func) {
+  return ((func == readiFunction) || (func == readcFunction));
+}
+
+int isPredefinedProcedure(Object* proc) {
+  return ((proc == writeiProcedure) || (proc == writecProcedure) || (proc == writelnProcedure));
+}
 
 void initCodeBuffer(void) {
   codeBlock = createCodeBlock(CODE_SIZE);

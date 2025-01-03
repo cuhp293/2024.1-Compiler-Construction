@@ -1,0 +1,25 @@
+(*Thuc hien bo Type_checking voi chuong trinh nay nay de thay chuong trinh nay chay thong. Sau do thay doi ma nguon cua chuong trinh de gay loi khong tuong ung kieu trong dieu kien cua lenh if. Loi duoc in kem tu "SoICT". In ca hinh anh man hinh chay thong va man hinh loi vao bao cao*)
+Program semantíc7; 
+	const c = 1;
+	type t = char;
+var y:t;
+	function f(x : integer):char;
+		const d = c;
+		type a = array(.5.) of t;
+var p:integer;
+i:integer;
+b:a;
+begin
+p:=0;
+for i:=1 to 5 do 
+begin
+b(.i.):= READC;
+if b(.i.)='A'then p:=p+1;
+end;
+if p+d > x then f:='0' else f:='1' 
+		end;
+	Begin
+y:='A';
+call WRITEC(y);
+call WRITEC(f(c));
+	End. (* Example 5 *)
