@@ -6,9 +6,9 @@ VAR  S : T;
 BEGIN
 	S:=0;
      I:=1;
-   WHILE I<=5 DO
-	BEGIN   
+   While I<=5 do
+	Begin     
       S:=S+I;
       I:=I+1;
-	END;
+	End;
 END.
