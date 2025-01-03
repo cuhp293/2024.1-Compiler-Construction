@@ -253,7 +253,7 @@ Token* getToken(void)
 		return makeToken(SB_RSEL, lineNo, colNo - 1);
 	case 26:
 		readChar();
-		return makeToken(SB_PERIOD, lineNo, colNo - 1);
+		return makeToken(SB_PERIOD, lineNo, colNo - 2);
 	case 27:
 		ln = lineNo;
 		cn = colNo;
