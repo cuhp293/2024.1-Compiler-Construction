@@ -1,0 +1,14 @@
+PROGRAM  CODEGEN7;  
+TYPE T = INTEGER;
+VAR  S : T;
+      I : INTEGER;
+    
+BEGIN
+	S:=0;
+     I:=1;
+   While I<=5 do
+	Begin     
+      S:=S+I;
+      I:=I+1;
+	End;
+END.

@@ -1,0 +1,7 @@
+Program Example1; (* Example 1 *)
+Begin
+If a > b Then
+  Begin
+    a := a : b;
+  End;
+End. (* Example 1 *)
