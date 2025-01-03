@@ -1,9 +1,3 @@
-/* 
- * @copyright (c) 2008, Hedspi, Hanoi University of Technology
- * @author Huu-Duc Nguyen
- * @version 1.0
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -13,7 +7,6 @@
 /******************************************************************/
 
 int main(int argc, char *argv[]) {
-  printf("20215118 Dinh Thi Hong Phuc\n%s\n", argv[1]);
   if (argc <= 1) {
     printf("parser: no input file.\n");
     return -1;

@@ -3,7 +3,7 @@ Program semantics7;
 	const c = 1;
 	type t = char;
 var y:t;
-	function f(x : char):char;
+	function f(x : integer):char;
 		const d = c;
 		type a = array(.5.) of t;
 var p:integer;

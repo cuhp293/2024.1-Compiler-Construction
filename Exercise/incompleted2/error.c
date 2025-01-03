@@ -51,7 +51,7 @@ void error(ErrorCode err, int lineNo, int colNo) {
   int i;
   for (i = 0 ; i < NUM_OF_ERRORS; i ++) 
     if (errors[i].errorCode == err) {
-      printf("SoICT:%d-%d:%s\n", lineNo, colNo, errors[i].message);
+      printf("%d-%d:%s\n", lineNo, colNo, errors[i].message);
       exit(0);
     }
 }

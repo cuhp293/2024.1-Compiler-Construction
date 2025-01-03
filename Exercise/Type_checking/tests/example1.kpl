@@ -1,0 +1,10 @@
+PROGRAM Example1; (* Example 1 *)
+CONST N = 10;
+
+FUNCTION F(VAR M : INTEGER) : INTEGER;
+  BEGIN
+  END;
+
+BEGIN
+  CALL WRITEI(F(N));
+END. (* Example 1 *)

@@ -1,4 +1,4 @@
-/* 
+/*
  * @copyright (c) 2008, Hedspi, Hanoi University of Technology
  * @author Huu-Duc Nguyen
  * @version 1.0
@@ -8,16 +8,17 @@
 #include <stdlib.h>
 #include "error.h"
 
-#define NUM_OF_ERRORS 29
+#define NUM_OF_ERRORS 30
 
 struct ErrorMessage {
-  ErrorCode errorCode;
-  char *message;
+	ErrorCode errorCode;
+	char* message;
 };
 
-struct ErrorMessage errors[29] = {
+struct ErrorMessage errors[30] = {
   {ERR_END_OF_COMMENT, "End of comment expected."},
   {ERR_IDENT_TOO_LONG, "Identifier too long."},
+  {ERR_NUMBER_TOO_LONG,"Value of integer number exceeds the range!"},
   {ERR_INVALID_CONSTANT_CHAR, "Invalid char constant."},
   {ERR_INVALID_SYMBOL, "Invalid symbol."},
   {ERR_INVALID_IDENT, "An identifier expected."},
@@ -40,27 +41,27 @@ struct ErrorMessage errors[29] = {
   {ERR_UNDECLARED_INT_CONSTANT, "Undeclared integer constant."},
   {ERR_UNDECLARED_TYPE, "Undeclared type."},
   {ERR_UNDECLARED_VARIABLE, "Undeclared variable."},
-  {ERR_UNDECLARED_FUNCTION, "Undeclared function."},
+  {ERR_INVALID_RETURN, "Expect the owner of the current scope."},
   {ERR_UNDECLARED_PROCEDURE, "Undeclared procedure."},
   {ERR_DUPLICATE_IDENT, "Duplicate identifier."},
   {ERR_TYPE_INCONSISTENCY, "Type inconsistency"},
-  {ERR_PARAMETERS_ARGUMENTS_INCONSISTENCY, "The number of arguments and the number of parameters are inconsistent."}
+  {ERR_PARAMETERS_ARGUMENTS_INCONSISTENCY, "The number of arguments and the number of parameters are inconsistent."},
 };
 
 void error(ErrorCode err, int lineNo, int colNo) {
-  int i;
-  for (i = 0 ; i < NUM_OF_ERRORS; i ++) 
-    if (errors[i].errorCode == err) {
-      printf("SoICT:%d-%d:%s\n", lineNo, colNo, errors[i].message);
-      exit(0);
-    }
+	int i;
+	for (i = 0; i < NUM_OF_ERRORS; i++)
+		if (errors[i].errorCode == err) {
+			printf("%d-%d:%s\n", lineNo, colNo, errors[i].message);
+			exit(0);
+		}
 }
 
 void missingToken(TokenType tokenType, int lineNo, int colNo) {
-  printf("%d-%d:Missing %s\n", lineNo, colNo, tokenToString(tokenType));
-  exit(0);
+	printf("%d-%d:Missing %s\n", lineNo, colNo, tokenToString(tokenType));
+	exit(0);
 }
 
-void assert(char *msg) {
-  printf("%s\n", msg);
+void assert(char* msg) {
+	printf("%s\n", msg);
 }
